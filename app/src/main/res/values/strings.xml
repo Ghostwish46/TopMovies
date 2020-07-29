@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TopMovies</string>
+
+    <string name="text_loading">Идёт загрузка данных</string>
+    <string name="text_loaded">Загрузка завершена</string>
+    <string name="text_error">Произошла ошибка</string>
+
+    <string name="action_schedule_viewing">Schedule viewing</string>
 </resources>
