@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Top Movies</string>
 
-    <string name="text_loading">Идёт загрузка данных</string>
-    <string name="text_loaded">Загрузка завершена</string>
-    <string name="text_error">Произошла ошибка: </string>
+    <string name="text_loading">Loading is in progress</string>
+    <string name="text_loaded">Download complete</string>
+    <string name="text_error">An error occurred: </string>
 
     <string name="text_notification_scheduled">Notification was scheduled successfully</string>
 
