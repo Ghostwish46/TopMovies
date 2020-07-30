@@ -2,48 +2,39 @@ package dev.ghost.topmovies.main
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import dev.ghost.topmovies.dataSources.MovieDataSource
 import dev.ghost.topmovies.entities.Movie
-import dev.ghost.topmovies.helpers.AppDatabase
-import dev.ghost.topmovies.network.ApiService
 import dev.ghost.topmovies.network.LoadingState
-import dev.ghost.topmovies.repositories.MovieRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _loadingState = MutableLiveData<LoadingState>()
-
-    private val movieRepository: MovieRepository
-    val moviesAdapter: MoviesAdapter
-
-    val moviesData: LiveData<List<Movie>>
+    private val moviesData: LiveData<PagedList<Movie>>
+    private val loadingState = MutableLiveData<LoadingState>()
+    val moviesAdapter: MoviesAdapter = MoviesAdapter()
 
     init {
-        val appDatabase = AppDatabase.getDatabase(application)
-        val apiService = ApiUtils.apiService
-
-        moviesAdapter = MoviesAdapter()
-        movieRepository = MovieRepository(apiService, appDatabase.movieDao)
-        moviesData = movieRepository.allMovies
-        fetchTasks()
+        // Initial config params for paged list.
+        val config = PagedList.Config.Builder()
+            .setPageSize(20)
+            .setEnablePlaceholders(false)
+            .build()
+        moviesData = initializedPagedListBuilder(config).build()
     }
 
-    val loadingState: LiveData<LoadingState>
-        get() = _loadingState
+    fun getMovies(): LiveData<PagedList<Movie>> = moviesData
+    fun getLoadingStates(): LiveData<LoadingState> = loadingState
 
-    private fun fetchTasks() {
-        viewModelScope.launch {
-            try {
-                _loadingState.value = LoadingState.LOADING
-                movieRepository.refresh()
-                _loadingState.value = LoadingState.LOADED
-            }
-            catch (ex:Exception)
-            {
-                _loadingState.value = LoadingState.error(ex.message)
+    private fun initializedPagedListBuilder(config: PagedList.Config):
+            LivePagedListBuilder<Int, Movie> {
+
+        val dataSourceFactory = object : DataSource.Factory<Int, Movie>() {
+            override fun create(): DataSource<Int, Movie> {
+                return MovieDataSource(viewModelScope, loadingState)
             }
         }
+        return LivePagedListBuilder<Int, Movie>(dataSourceFactory, config)
     }
 }

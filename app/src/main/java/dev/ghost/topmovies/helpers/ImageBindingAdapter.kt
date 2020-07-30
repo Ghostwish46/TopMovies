@@ -6,6 +6,7 @@ import com.squareup.picasso.Picasso
 import dev.ghost.topmovies.R
 
 
+// Picasso binding adapter for images loading.
 @BindingAdapter("imageUrl")
 fun loadImage(imageView: ImageView, url: String) {
     if (url != "") {

@@ -1,9 +1,14 @@
 <resources>
-    <string name="app_name">TopMovies</string>
+    <string name="app_name">Top Movies</string>
 
     <string name="text_loading">Идёт загрузка данных</string>
     <string name="text_loaded">Загрузка завершена</string>
-    <string name="text_error">Произошла ошибка</string>
+    <string name="text_error">Произошла ошибка: </string>
+
+    <string name="text_notification_scheduled">Notification was scheduled successfully</string>
+
+    <string name="channel_name">TopMovies scheduling channel</string>
+    <string name="channel_description">Channel for notifications about scheduled films</string>
 
     <string name="action_schedule_viewing">Schedule viewing</string>
 </resources>

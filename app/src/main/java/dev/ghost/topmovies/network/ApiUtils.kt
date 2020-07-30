@@ -1,4 +1,4 @@
-import dev.ghost.topmovies.network.ApiService
+package dev.ghost.topmovies.network
 
 object ApiUtils {
 

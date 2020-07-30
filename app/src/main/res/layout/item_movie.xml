@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.graphics.Color"></import>
         <variable
             name="movie"
             type="dev.ghost.topmovies.entities.Movie" />
@@ -115,9 +115,12 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@drawable/circle_shape"
-                android:backgroundTint="@color/colorPrimary"
                 android:max="100"
-                android:progress="@{movie.formattedRating}"
+                android:progress="@{movie.getFormattedRating()}"
+
+                android:progressTint="@{Color.parseColor(movie.getRatingMainColor())}"
+                android:backgroundTint="@{Color.parseColor(movie.getRatingSecondaryColor())}"
+
                 android:progressDrawable="@drawable/circular_progress_bar"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView"
                 app:layout_constraintEnd_toEndOf="@+id/imageView"
@@ -128,7 +131,7 @@
                 android:id="@+id/textViewItemMovieRating"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text='@{movie.formattedRating  + "%"}'
+                android:text='@{movie.getFormattedRating() + "%"}'
                 android:textAlignment="center"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"

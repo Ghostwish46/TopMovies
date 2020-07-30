@@ -7,6 +7,12 @@
     <color name="colorGreen">#46d079</color>
     <color name="darkGreen">#4046D079</color>
 
+    <color name="colorRed">#9e1e4e</color>
+    <color name="colorDarkRed">#409E1E4E</color>
+
+    <color name="colorYellow">#d1d424</color>
+    <color name="colorDarkYellow">#40D1D424</color>
+
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
 </resources>
