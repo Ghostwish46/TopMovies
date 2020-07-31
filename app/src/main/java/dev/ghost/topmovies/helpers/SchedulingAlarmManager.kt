@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -24,6 +25,7 @@ class SchedulingAlarmManager {
         val intent = Intent(context, SchedulingReceiver::class.java)
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
         intent.action = ALARM_ACTION
+        intent.data =  Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))
 
         val bundle = Bundle()
         bundle.putParcelable(MainActivity.MOVIE, movie)
@@ -31,7 +33,7 @@ class SchedulingAlarmManager {
 
         val pendingIntent = PendingIntent.getBroadcast(
             context, movie.id, intent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+            0
         )
 
         val alarmManager = context

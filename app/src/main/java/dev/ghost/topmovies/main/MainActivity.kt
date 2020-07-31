@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.OnScheduleClickListener 
                         movie.notificationTime = scheduledDate.timeInMillis
 
                         SchedulingAlarmManager().setScheduling(
-                            this.applicationContext,
+                            this@MainActivity.applicationContext,
                             movie
                         )
                     },
