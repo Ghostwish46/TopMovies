@@ -48,9 +48,7 @@ class SchedulingAlarmManager {
             pendingIntent
         )
 
-        Toast.makeText(
-            context, context.getString(R.string.text_notification_scheduled),
-            Toast.LENGTH_LONG
-        ).show()
+
+
     }
 }

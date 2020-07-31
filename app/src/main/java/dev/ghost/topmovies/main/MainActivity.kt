@@ -9,17 +9,26 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import dev.ghost.topmovies.R
 import dev.ghost.topmovies.entities.Movie
 import dev.ghost.topmovies.helpers.SchedulingAlarmManager
 import dev.ghost.topmovies.network.Status
+import dev.ghost.topmovies.workers.SchedulerWorker
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), MoviesAdapter.OnScheduleClickListener {
 
     companion object {
         const val MOVIE = "movie"
+        const val TITLE = "title"
+        const val OVERVIEW = "overview"
+        const val MOVIE_ID = "movie_id"
     }
 
     private lateinit var mainActivityViewModel: MainActivityViewModel
@@ -90,10 +99,33 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.OnScheduleClickListener 
 
                         movie.notificationTime = scheduledDate.timeInMillis
 
-                        SchedulingAlarmManager().setScheduling(
-                            this@MainActivity.applicationContext,
-                            movie
-                        )
+//                        SchedulingAlarmManager().setScheduling(
+//                            this@MainActivity.applicationContext,
+//                            movie
+//                        )
+
+                        val data = Data.Builder()
+                            .putString(TITLE, movie.title)
+                            .putString(OVERVIEW, movie.overview)
+                            .putInt(MOVIE_ID, movie.id)
+                            .build()
+
+                        val scheduleWorker =
+                            OneTimeWorkRequest.Builder(
+                                SchedulerWorker::class.java
+                            )
+                                .setInputData(data)
+                                .setInitialDelay(
+                                    movie.notificationTime - System.currentTimeMillis(),
+                                    TimeUnit.MILLISECONDS
+                                )
+                                .build()
+                        WorkManager.getInstance(applicationContext).enqueue(scheduleWorker)
+
+                        Toast.makeText(
+                            this, getString(R.string.text_notification_scheduled),
+                            Toast.LENGTH_LONG
+                        ).show()
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
