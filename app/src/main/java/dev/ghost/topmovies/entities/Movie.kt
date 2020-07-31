@@ -50,7 +50,7 @@ data class Movie(
 
     fun getMovieRating(): RatingType =
         when (getFormattedRating()) {
-            in 40..70 -> RatingType.MEDIUM
+            in 40..69 -> RatingType.MEDIUM
             in 70..100 -> RatingType.HIGH
             else -> RatingType.LOW
         }

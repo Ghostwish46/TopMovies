@@ -6,7 +6,7 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
-    companion object{
+    companion object {
         const val API_KEY = "2ba4c2cc3a41192b215410b0f7814612"
     }
 

@@ -7,9 +7,8 @@ import android.content.Context
 import android.os.Build
 import android.view.View
 
-class App:Application() {
-    companion object
-    {
+class App : Application() {
+    companion object {
         const val CHANNEL_ID = "TopMoviesChannel"
     }
 
@@ -18,8 +17,7 @@ class App:Application() {
         createNotificationService()
     }
 
-    private fun createNotificationService()
-    {
+    private fun createNotificationService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
             val descriptionText = getString(R.string.channel_description)

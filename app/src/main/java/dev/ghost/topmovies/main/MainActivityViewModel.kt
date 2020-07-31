@@ -15,7 +15,7 @@ import java.util.*
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    companion object{
+    companion object {
         const val PAGE_SIZE = 20
     }
 
