@@ -1,14 +1,10 @@
 package dev.ghost.topmovies.main
 
-import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.icu.util.Calendar
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -17,13 +13,11 @@ import dev.ghost.topmovies.R
 import dev.ghost.topmovies.databinding.ItemMovieBinding
 import dev.ghost.topmovies.entities.Movie
 import dev.ghost.topmovies.helpers.SchedulingAlarmManager
-import dev.ghost.topmovies.receivers.SchedulingReceiver
 import kotlinx.android.synthetic.main.item_movie.view.*
 import java.util.*
-import kotlin.math.min
 
 
-class MoviesAdapter :
+class MoviesAdapter(val onScheduleClickListener: OnScheduleClickListener) :
     PagedListAdapter<Movie, MoviesAdapter.MovieViewHolder>(MOVIES_COMPARATOR) {
 
     companion object {
@@ -46,9 +40,13 @@ class MoviesAdapter :
     inner class MovieViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movie: Movie) {
+        fun bind(movie: Movie, scheduleClickListener:OnScheduleClickListener) {
             binding.movie = movie;
             binding.executePendingBindings();
+
+            binding.root.buttonItemMovieScheduleViewing.setOnClickListener {
+                scheduleClickListener.onClick(movie)
+            }
         }
     }
 
@@ -65,43 +63,12 @@ class MoviesAdapter :
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val currentMovie = getItem(position)
         currentMovie?.let {
-            holder.bind(currentMovie)
-
-            holder.itemView.buttonItemMovieScheduleViewing.setOnClickListener {
-                val calendar = GregorianCalendar()
-
-                lateinit var scheduledDate: GregorianCalendar
-
-                val dpd = DatePickerDialog(
-                    holder.itemView.context,
-                    DatePickerDialog.OnDateSetListener { dialog, year, monthOfYear, dayOfMonth ->
-
-                        scheduledDate = GregorianCalendar(year, monthOfYear, dayOfMonth)
-
-                        val tpd = TimePickerDialog(
-                            holder.itemView.context,
-                            TimePickerDialog.OnTimeSetListener { timePicker, hours, minutes ->
-                                scheduledDate.set(Calendar.HOUR_OF_DAY, hours)
-                                scheduledDate.set(Calendar.MINUTE, minutes)
-
-                                currentMovie.notificationTime = scheduledDate.timeInMillis
-
-                                SchedulingAlarmManager().setScheduling(
-                                    holder.itemView.context.applicationContext,
-                                    currentMovie
-                                )
-                            },
-                            calendar.get(Calendar.HOUR_OF_DAY),
-                            calendar.get(Calendar.MINUTE),
-                            true
-                        )
-                        tpd.show()
-                    }, calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-                )
-                dpd.show()
-            }
+            holder.bind(currentMovie, onScheduleClickListener)
         }
+    }
+
+    interface OnScheduleClickListener
+    {
+        fun onClick(movie: Movie)
     }
 }

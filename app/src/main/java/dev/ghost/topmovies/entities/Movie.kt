@@ -51,16 +51,16 @@ data class Movie(
         }
 
 
-    fun getRatingMainColor(): String =
+    fun getRatingMainColor(): Int =
         when (getMovieRating()) {
-            RatingType.LOW -> "#9e1e4e"
-            RatingType.MEDIUM -> "#d1d424"
-            RatingType.HIGH -> "#46d079"
+            RatingType.LOW -> R.color.colorRed
+            RatingType.MEDIUM -> R.color.colorYellow
+            RatingType.HIGH -> R.color.colorGreen
         }
-    fun getRatingSecondaryColor(): String =
+    fun getRatingSecondaryColor(): Int =
         when (getMovieRating()) {
-            RatingType.LOW -> "#409E1E4E"
-            RatingType.MEDIUM -> "#40D1D424"
-            RatingType.HIGH -> "#4046D079"
+            RatingType.LOW -> R.color.colorDarkRed
+            RatingType.MEDIUM -> R.color.colorDarkYellow
+            RatingType.HIGH -> R.color.colorDarkGreen
         }
 }

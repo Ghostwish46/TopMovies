@@ -1,24 +1,33 @@
 package dev.ghost.topmovies.main
 
 import android.app.Application
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.icu.util.Calendar
 import androidx.lifecycle.*
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import dev.ghost.topmovies.dataSources.MovieDataSource
 import dev.ghost.topmovies.entities.Movie
+import dev.ghost.topmovies.helpers.SchedulingAlarmManager
 import dev.ghost.topmovies.network.LoadingState
+import java.util.*
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
+    companion object{
+        const val PAGE_SIZE = 20
+    }
+
     private val moviesData: LiveData<PagedList<Movie>>
     private val loadingState = MutableLiveData<LoadingState>()
-    val moviesAdapter: MoviesAdapter = MoviesAdapter()
+    lateinit var moviesAdapter: MoviesAdapter
 
     init {
         // Initial config params for paged list.
         val config = PagedList.Config.Builder()
-            .setPageSize(20)
+            .setPageSize(PAGE_SIZE)
             .setEnablePlaceholders(false)
             .build()
         moviesData = initializedPagedListBuilder(config).build()
