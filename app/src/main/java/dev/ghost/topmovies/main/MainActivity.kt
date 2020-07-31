@@ -3,8 +3,10 @@ package dev.ghost.topmovies.main
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.icu.util.Calendar
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +17,6 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import dev.ghost.topmovies.R
 import dev.ghost.topmovies.entities.Movie
-import dev.ghost.topmovies.helpers.SchedulingAlarmManager
 import dev.ghost.topmovies.network.Status
 import dev.ghost.topmovies.workers.SchedulerWorker
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,7 +26,6 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity(), MoviesAdapter.OnScheduleClickListener {
 
     companion object {
-        const val MOVIE = "movie"
         const val TITLE = "title"
         const val OVERVIEW = "overview"
         const val MOVIE_ID = "movie_id"
@@ -44,25 +44,26 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.OnScheduleClickListener 
         observeLoadingStateData()
         observeMoviesData()
         initializeMoviesList()
-
-        resources
     }
 
     // Observe live data connection states from data source.
     private fun observeLoadingStateData() {
         mainActivityViewModel.getLoadingStates().observe(this, Observer {
             when (it.status) {
-                Status.RUNNING ->
-                    Toast.makeText(this, getString(R.string.text_loading), Toast.LENGTH_SHORT)
-                        .show()
-                Status.SUCCESS ->
-                    Toast.makeText(this, getString(R.string.text_loaded), Toast.LENGTH_SHORT).show()
-                Status.FAILED ->
+                Status.RUNNING -> {
+                    progressBarMainLoading.visibility = View.VISIBLE
+                }
+                Status.SUCCESS -> {
+                    progressBarMainLoading.visibility = View.GONE
+                }
+                Status.FAILED -> {
                     Toast.makeText(
                         this,
                         getString(R.string.text_error) + it.message,
                         Toast.LENGTH_LONG
                     ).show()
+                    progressBarMainLoading.visibility = View.GONE
+                }
             }
         })
     }
@@ -99,11 +100,7 @@ class MainActivity : AppCompatActivity(), MoviesAdapter.OnScheduleClickListener 
 
                         movie.notificationTime = scheduledDate.timeInMillis
 
-//                        SchedulingAlarmManager().setScheduling(
-//                            this@MainActivity.applicationContext,
-//                            movie
-//                        )
-
+                        // Setting up the notification's work manager.
                         val data = Data.Builder()
                             .putString(TITLE, movie.title)
                             .putString(OVERVIEW, movie.overview)

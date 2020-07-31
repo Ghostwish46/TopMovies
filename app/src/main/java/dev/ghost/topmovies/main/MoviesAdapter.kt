@@ -1,8 +1,5 @@
 package dev.ghost.topmovies.main
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.icu.util.Calendar
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -12,12 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.ghost.topmovies.R
 import dev.ghost.topmovies.databinding.ItemMovieBinding
 import dev.ghost.topmovies.entities.Movie
-import dev.ghost.topmovies.helpers.SchedulingAlarmManager
 import kotlinx.android.synthetic.main.item_movie.view.*
 import java.util.*
 
 
-class MoviesAdapter(val onScheduleClickListener: OnScheduleClickListener) :
+class MoviesAdapter(private val onScheduleClickListener: OnScheduleClickListener) :
     PagedListAdapter<Movie, MoviesAdapter.MovieViewHolder>(MOVIES_COMPARATOR) {
 
     companion object {
@@ -40,9 +36,9 @@ class MoviesAdapter(val onScheduleClickListener: OnScheduleClickListener) :
     inner class MovieViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movie: Movie, scheduleClickListener:OnScheduleClickListener) {
-            binding.movie = movie;
-            binding.executePendingBindings();
+        fun bind(movie: Movie, scheduleClickListener: OnScheduleClickListener) {
+            binding.movie = movie
+            binding.executePendingBindings()
 
             binding.root.buttonItemMovieScheduleViewing.setOnClickListener {
                 scheduleClickListener.onClick(movie)
@@ -67,8 +63,7 @@ class MoviesAdapter(val onScheduleClickListener: OnScheduleClickListener) :
         }
     }
 
-    interface OnScheduleClickListener
-    {
+    interface OnScheduleClickListener {
         fun onClick(movie: Movie)
     }
 }

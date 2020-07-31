@@ -11,10 +11,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dev.ghost.topmovies.App
 import dev.ghost.topmovies.R
-import dev.ghost.topmovies.entities.Movie
-import dev.ghost.topmovies.helpers.SchedulingAlarmManager
 import dev.ghost.topmovies.main.MainActivity
 
+// This worker shows scheduled notification about movie.
 class SchedulerWorker(context: Context, workerParams: WorkerParameters) : Worker(
     context,
     workerParams
@@ -25,8 +24,7 @@ class SchedulerWorker(context: Context, workerParams: WorkerParameters) : Worker
         val title = inputData.getString(MainActivity.TITLE)
         val overview = inputData.getString(MainActivity.OVERVIEW)
 
-        if (id > -1 && !title.isNullOrBlank() && !overview.isNullOrBlank())
-        {
+        if (id > -1 && !title.isNullOrBlank() && !overview.isNullOrBlank()) {
             val builder = NotificationCompat
                 .Builder(applicationContext, App.CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon_placeholder)
@@ -60,8 +58,7 @@ class SchedulerWorker(context: Context, workerParams: WorkerParameters) : Worker
             notificationManager.notify(id, builder.build())
 
             return Result.success()
-        }
-        else
+        } else
             return Result.failure()
     }
 }

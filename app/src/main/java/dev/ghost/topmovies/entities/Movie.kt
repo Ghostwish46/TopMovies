@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 import dev.ghost.topmovies.R
 import kotlinx.android.parcel.Parcelize
 import java.text.SimpleDateFormat
+import java.util.*
 
 @Parcelize
 @Entity
@@ -23,12 +24,12 @@ data class Movie(
 ) : Parcelable {
 
     fun getFormattedDate(): String {
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return try {
             val date = simpleDateFormat.parse(releaseDate)
 
             if (date != null) {
-                SimpleDateFormat("MMMM dd, yyyy").format(date)
+                SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(date)
             } else
                 releaseDate
         } catch (ex: Exception) {
@@ -40,8 +41,12 @@ data class Movie(
         "https://image.tmdb.org/t/p/w220_and_h330_face$posterPath"
 
 
-    fun getFormattedRating(): Int =
-        (voteAverage * 10).toInt()
+    fun getFormattedRating(): Int {
+        return if (voteAverage < 0)
+            0
+        else
+            (voteAverage * 10).toInt()
+    }
 
     fun getMovieRating(): RatingType =
         when (getFormattedRating()) {
@@ -57,6 +62,7 @@ data class Movie(
             RatingType.MEDIUM -> R.color.colorYellow
             RatingType.HIGH -> R.color.colorGreen
         }
+
     fun getRatingSecondaryColor(): Int =
         when (getMovieRating()) {
             RatingType.LOW -> R.color.colorDarkRed

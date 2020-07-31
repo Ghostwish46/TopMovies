@@ -10,7 +10,6 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import dev.ghost.topmovies.dataSources.MovieDataSource
 import dev.ghost.topmovies.entities.Movie
-import dev.ghost.topmovies.helpers.SchedulingAlarmManager
 import dev.ghost.topmovies.network.LoadingState
 import java.util.*
 
